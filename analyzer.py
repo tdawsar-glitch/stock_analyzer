@@ -10,58 +10,30 @@ import numpy as np
 from datetime import datetime
 import sys
 
-try:
-    # Package (recommended): python -m stock_analyzer.main
-    from .config import (
-        RSI_OVERSOLD,
-        RSI_OVERBOUGHT,
-        ADX_STRONG_TREND,
-        ATR_STOP_MULTIPLIER,
-        ACCOUNT_SIZE,
-        MAX_RISK_PER_TRADE,
-        MAX_POSITION_SIZE,
-        STOCK_SECTORS,
-        SECTOR_ETFS,
-    )
-    from .data.fetcher import (
-        fetch_stock_data,
-        fetch_market_data,
-        fetch_sector_data,
-        get_stock_info,
-        get_earnings_date,
-        get_options_activity,
-    )
-    from .strategy.indicators import (
-        calculate_all_indicators,
-        calculate_volume_analysis,
-        identify_support_resistance,
-    )
-except ImportError:
-    # Script fallback: python stock_analyzer/analyzer.py
-    from config import (
-        RSI_OVERSOLD,
-        RSI_OVERBOUGHT,
-        ADX_STRONG_TREND,
-        ATR_STOP_MULTIPLIER,
-        ACCOUNT_SIZE,
-        MAX_RISK_PER_TRADE,
-        MAX_POSITION_SIZE,
-        STOCK_SECTORS,
-        SECTOR_ETFS,
-    )
-    from data.fetcher import (
-        fetch_stock_data,
-        fetch_market_data,
-        fetch_sector_data,
-        get_stock_info,
-        get_earnings_date,
-        get_options_activity,
-    )
-    from strategy.indicators import (
-        calculate_all_indicators,
-        calculate_volume_analysis,
-        identify_support_resistance,
-    )
+from config import (
+    RSI_OVERSOLD,
+    RSI_OVERBOUGHT,
+    ADX_STRONG_TREND,
+    ATR_STOP_MULTIPLIER,
+    ACCOUNT_SIZE,
+    MAX_RISK_PER_TRADE,
+    MAX_POSITION_SIZE,
+    STOCK_SECTORS,
+    SECTOR_ETFS,
+)
+from data.fetcher import (
+    fetch_stock_data,
+    fetch_market_data,
+    fetch_sector_data,
+    get_stock_info,
+    get_earnings_date,
+    get_options_activity,
+)
+from strategy.indicators import (
+    calculate_all_indicators,
+    calculate_volume_analysis,
+    identify_support_resistance,
+)
 
 
 class StockAnalyzer:
@@ -70,22 +42,24 @@ class StockAnalyzer:
     Evaluates trend, momentum, volume, volatility, and market context.
     """
     
-    def __init__(self, symbol: str):
+    def __init__(self, symbol: str, verbose: bool = True):
         self.symbol = symbol.upper()
         self.df = None
         self.market_df = None
         self.sector_df = None
         self.info = None
         self.analysis = {}
+        self.verbose = verbose
         
     def load_data(self):
         """Load all required data."""
-        print(f"\n{'='*60}")
-        print(f"  ANALYZING: {self.symbol}")
-        print(f"{'='*60}\n")
+        if self.verbose:
+            print(f"\n{'='*60}")
+            print(f"  ANALYZING: {self.symbol}")
+            print(f"{'='*60}\n")
         
         # Stock data
-        self.df = fetch_stock_data(self.symbol)
+        self.df = fetch_stock_data(self.symbol, verbose=self.verbose)
         if self.df is None:
             raise ValueError(f"Could not load data for {self.symbol}")
         
@@ -93,13 +67,14 @@ class StockAnalyzer:
         self.df = calculate_all_indicators(self.df)
         
         # Market data
-        print("\nLoading market context...")
-        self.market_df = fetch_market_data()
+        if self.verbose:
+            print("\nLoading market context...")
+        self.market_df = fetch_market_data(verbose=self.verbose)
         if self.market_df is not None:
             self.market_df = calculate_all_indicators(self.market_df)
         
         # Sector data
-        self.sector_df = fetch_sector_data(self.symbol)
+        self.sector_df = fetch_sector_data(self.symbol, verbose=self.verbose)
         if self.sector_df is not None:
             self.sector_df = calculate_all_indicators(self.sector_df)
         
@@ -416,8 +391,9 @@ class StockAnalyzer:
     def run_full_analysis(self) -> dict:
         """Run complete analysis and return all results."""
         self.load_data()
-        
-        print("\n📊 Running analysis...")
+
+        if self.verbose:
+            print("\n📊 Running analysis...")
         
         self.analysis = {
             "symbol": self.symbol,
@@ -558,7 +534,7 @@ class StockAnalyzer:
         print(f"{'═'*70}\n")
 
 
-def analyze(symbol: str) -> dict:
+def analyze(symbol: str, verbose: bool = True, show_report: bool = True) -> dict:
     """
     Quick function to analyze a stock.
     
@@ -566,9 +542,10 @@ def analyze(symbol: str) -> dict:
         from stock_analyzer.analyzer import analyze
         result = analyze("NVDA")
     """
-    analyzer = StockAnalyzer(symbol)
+    analyzer = StockAnalyzer(symbol, verbose=verbose)
     result = analyzer.run_full_analysis()
-    analyzer.print_report()
+    if show_report:
+        analyzer.print_report()
     return result
 
 

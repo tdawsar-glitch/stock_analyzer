@@ -23,26 +23,15 @@ cd stock_analyzer
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Run the analyzer
-python main.py NVDA
+# 3. Run the Streamlit app
+streamlit run streamlit_app.py
 ```
 
 ## Usage
 
-### Single Stock Analysis
+### Streamlit (Browser)
 ```bash
-python main.py NVDA
-```
-
-### Multiple Stocks
-```bash
-python main.py AAPL MSFT NVDA AMD
-```
-
-### Interactive Mode
-```bash
-python main.py
-# Then enter symbol when prompted
+streamlit run streamlit_app.py
 ```
 
 ### In Python Code
@@ -77,7 +66,8 @@ MAX_POSITIONS = 5
 
 ```
 stock_analyzer/
-├── main.py              # Entry point
+├── streamlit_app.py     # Streamlit UI
+├── main.py              # CLI entry point (optional)
 ├── analyzer.py          # Main analysis engine
 ├── config.py            # Configuration settings
 ├── requirements.txt     # Dependencies
