@@ -25,7 +25,7 @@ Author: Built with guidance from:
 """
 
 import sys
-from .analyzer import StockAnalyzer, analyze
+from analyzer import StockAnalyzer, analyze
 
 
 def main():

@@ -9,40 +9,22 @@ import pandas as pd
 import numpy as np
 import sys
 
-try:
-    from ..config import (
-        MA_SHORT,
-        MA_MEDIUM,
-        MA_LONG,
-        MA_VERY_LONG,
-        RSI_PERIOD,
-        MACD_FAST,
-        MACD_SLOW,
-        MACD_SIGNAL,
-        ATR_PERIOD,
-        BOLLINGER_PERIOD,
-        BOLLINGER_STD,
-        VOLUME_MA_PERIOD,
-        ADX_PERIOD,
-        MOMENTUM_PERIOD,
-    )
-except ImportError:
-    from config import (
-        MA_SHORT,
-        MA_MEDIUM,
-        MA_LONG,
-        MA_VERY_LONG,
-        RSI_PERIOD,
-        MACD_FAST,
-        MACD_SLOW,
-        MACD_SIGNAL,
-        ATR_PERIOD,
-        BOLLINGER_PERIOD,
-        BOLLINGER_STD,
-        VOLUME_MA_PERIOD,
-        ADX_PERIOD,
-        MOMENTUM_PERIOD,
-    )
+from config import (
+    MA_SHORT,
+    MA_MEDIUM,
+    MA_LONG,
+    MA_VERY_LONG,
+    RSI_PERIOD,
+    MACD_FAST,
+    MACD_SLOW,
+    MACD_SIGNAL,
+    ATR_PERIOD,
+    BOLLINGER_PERIOD,
+    BOLLINGER_STD,
+    VOLUME_MA_PERIOD,
+    ADX_PERIOD,
+    MOMENTUM_PERIOD,
+)
 
 
 def calculate_moving_averages(df: pd.DataFrame) -> pd.DataFrame:

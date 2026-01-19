@@ -7,15 +7,15 @@ Handles all data retrieval from Yahoo Finance.
 import yfinance as yf
 import pandas as pd
 from datetime import datetime
-import sys
-sys.path.append('..')
-try:
-    from ..config import DATA_PERIOD, DATA_INTERVAL, MARKET_ETF, SECTOR_ETFS, STOCK_SECTORS
-except ImportError:
-    from config import DATA_PERIOD, DATA_INTERVAL, MARKET_ETF, SECTOR_ETFS, STOCK_SECTORS
+
+from config import DATA_PERIOD, DATA_INTERVAL, MARKET_ETF, SECTOR_ETFS, STOCK_SECTORS
 
 
-def fetch_stock_data(symbol: str, period: str = DATA_PERIOD) -> pd.DataFrame:
+def fetch_stock_data(
+    symbol: str,
+    period: str = DATA_PERIOD,
+    verbose: bool = True,
+) -> pd.DataFrame:
     """
     Fetch historical OHLCV data for a stock.
     
@@ -31,31 +31,35 @@ def fetch_stock_data(symbol: str, period: str = DATA_PERIOD) -> pd.DataFrame:
         df = ticker.history(period=period, interval=DATA_INTERVAL)
         
         if df.empty:
-            print(f"⚠️  No data found for {symbol}")
+            if verbose:
+                print(f"⚠️  No data found for {symbol}")
             return None
         
         df.index = pd.to_datetime(df.index)
         df = df.dropna()
-        print(f"✓ Loaded {len(df)} days for {symbol}")
+        if verbose:
+            print(f"✓ Loaded {len(df)} days for {symbol}")
         return df
         
     except Exception as e:
-        print(f"❌ Error fetching {symbol}: {e}")
+        if verbose:
+            print(f"❌ Error fetching {symbol}: {e}")
         return None
 
 
-def fetch_market_data() -> pd.DataFrame:
+def fetch_market_data(verbose: bool = True) -> pd.DataFrame:
     """Fetch SPY data for market context."""
-    return fetch_stock_data(MARKET_ETF)
+    return fetch_stock_data(MARKET_ETF, verbose=verbose)
 
 
-def fetch_sector_data(symbol: str) -> pd.DataFrame:
+def fetch_sector_data(symbol: str, verbose: bool = True) -> pd.DataFrame:
     """Fetch the sector ETF data for a given stock."""
     sector_etf = STOCK_SECTORS.get(symbol.upper())
     if sector_etf:
         sector_name = SECTOR_ETFS.get(sector_etf, "Unknown")
-        print(f"📊 {symbol} sector: {sector_name} ({sector_etf})")
-        return fetch_stock_data(sector_etf)
+        if verbose:
+            print(f"📊 {symbol} sector: {sector_name} ({sector_etf})")
+        return fetch_stock_data(sector_etf, verbose=verbose)
     return None
 
 
