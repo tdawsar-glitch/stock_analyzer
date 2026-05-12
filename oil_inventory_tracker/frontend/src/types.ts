@@ -18,6 +18,7 @@ export type GeographyMeta = {
 export type Meta = {
   last_refresh: string | null;
   demo_mode?: boolean;
+  vortexa_key_set?: boolean;
   products: ProductMeta[];
   geographies: GeographyMeta[];
 };

@@ -162,10 +162,19 @@ class VortexaClient:
     def _get_search(self) -> SearchCallable:
         if self._search_fn is not None:
             return self._search_fn
-        if not self.settings.vortexa_api_key:
+        key = self.settings.vortexa_api_key
+        if not key:
             raise RuntimeError(
-                "VORTEXA_API_KEY is not set. Populate .env (see .env.example)."
+                "VORTEXA_API_KEY is not set. Paste your key into the "
+                "VORTEXA_API_KEY= line of oil_inventory_tracker/.env "
+                "(or export it in your shell), then restart the backend."
             )
+        # The Vortexa SDK reads os.environ["VORTEXA_API_KEY"] itself. We
+        # propagate the value from our settings object so users can put the
+        # key in .env and have a single source of truth.
+        import os
+        os.environ["VORTEXA_API_KEY"] = key
+
         # Lazy import so the package can be imported in offline tests.
         from vortexasdk import OnshoreInventories  # type: ignore
 
@@ -180,8 +189,16 @@ class VortexaClient:
             log.info("OIT_DEMO_MODE=1 — using synthetic data (no Vortexa calls)")
             self._verified = True
             return True
+        if not self.settings.vortexa_api_key:
+            log.warning(
+                "VORTEXA_API_KEY is empty — backend will start, but every "
+                "/api/inventory call will return an error until you paste "
+                "your key into oil_inventory_tracker/.env and restart."
+            )
+            return False
         try:
             self._get_search()
+            log.info("Vortexa SDK initialized (key length=%d)", len(self.settings.vortexa_api_key))
             self._verified = True
             return True
         except Exception as e:  # noqa: BLE001

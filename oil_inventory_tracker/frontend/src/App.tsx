@@ -161,6 +161,26 @@ export default function App() {
         )}
 
         <main className="main">
+          {meta && meta.vortexa_key_set === false && !meta.demo_mode && (
+            <div
+              style={{
+                border: "1px solid var(--warn)",
+                background: "#fff8e6",
+                padding: "10px 14px",
+                marginBottom: 12,
+                borderRadius: 2,
+                fontSize: 12,
+                color: "var(--slate-900)",
+              }}
+            >
+              <strong>Vortexa API key not set.</strong> Paste your key into the
+              <code style={{ margin: "0 4px" }}>VORTEXA_API_KEY=</code>
+              line of <code>oil_inventory_tracker/.env</code> and restart the
+              backend. Until then, <code>/api/inventory</code> calls will
+              return errors.
+            </div>
+          )}
+
           {showReconcile && <Reconcile />}
 
           {orderedProducts.length === 0 ? (

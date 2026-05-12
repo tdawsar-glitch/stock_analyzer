@@ -129,6 +129,7 @@ def meta(s: Settings = Depends(settings_dep)):
     return {
         "last_refresh": last.isoformat() + "Z" if last else None,
         "demo_mode": s.demo_mode,
+        "vortexa_key_set": bool(s.vortexa_api_key),
         "products": [
             {"key": p.key, "label": p.label, "display_unit": p.display_unit,
              "configured": s.demo_mode or bool(p.resolved_ids)}
