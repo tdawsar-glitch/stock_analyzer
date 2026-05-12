@@ -96,7 +96,24 @@ export default function App() {
   return (
     <div className="app">
       <header className="topbar">
-        <h1>Oil Inventory Tracker</h1>
+        <h1>
+          Oil Inventory Tracker
+          {meta?.demo_mode && (
+            <span
+              style={{
+                marginLeft: 10,
+                fontSize: 10,
+                padding: "2px 6px",
+                background: "var(--warn)",
+                borderRadius: 2,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+              }}
+            >
+              demo data
+            </span>
+          )}
+        </h1>
         <div className="meta">
           <span>
             last refresh:{" "}

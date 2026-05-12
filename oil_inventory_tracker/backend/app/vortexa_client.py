@@ -51,6 +51,11 @@ class VortexaClient:
         frequency: str = "day",
     ) -> FetchResult:
         """Fetch (and sum, where needed) an onshore inventory series in barrels."""
+        if self.settings.demo_mode:
+            from .demo_data import synthesize
+            df = synthesize(product.key, geography.kind, geography.key, start, end)
+            return FetchResult(df, partial=False)
+
         product_ids = product.resolved_ids
         if not product_ids:
             raise ValueError(
@@ -170,6 +175,10 @@ class VortexaClient:
     def verify(self) -> bool:
         """Optional one-shot sanity check at startup."""
         if self._verified:
+            return True
+        if self.settings.demo_mode:
+            log.info("OIT_DEMO_MODE=1 — using synthetic data (no Vortexa calls)")
+            self._verified = True
             return True
         try:
             self._get_search()

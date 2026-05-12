@@ -63,6 +63,7 @@ class Settings:
     backend_port: int
     products: dict[str, Product]
     geographies: dict[str, Geography]
+    demo_mode: bool = False
 
 
 def _load_products() -> dict[str, Product]:
@@ -94,4 +95,5 @@ def get_settings() -> Settings:
         backend_port=int(os.getenv("BACKEND_PORT", "8000")),
         products=_load_products(),
         geographies=_load_geographies(),
+        demo_mode=os.getenv("OIT_DEMO_MODE", "").lower() in ("1", "true", "yes"),
     )

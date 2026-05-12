@@ -128,14 +128,15 @@ def meta(s: Settings = Depends(settings_dep)):
     last = state.cache.last_refresh()
     return {
         "last_refresh": last.isoformat() + "Z" if last else None,
+        "demo_mode": s.demo_mode,
         "products": [
             {"key": p.key, "label": p.label, "display_unit": p.display_unit,
-             "configured": bool(p.resolved_ids)}
+             "configured": s.demo_mode or bool(p.resolved_ids)}
             for p in s.products.values()
         ],
         "geographies": [
             {"key": g.key, "label": g.label, "kind": g.kind,
-             "configured": g.key == "global" or bool(g.resolved_ids),
+             "configured": s.demo_mode or g.key == "global" or bool(g.resolved_ids),
              "eia_reconcile": g.eia_reconcile}
             for g in s.geographies.values()
         ],

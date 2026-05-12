@@ -57,11 +57,12 @@ def main() -> int:
     total_rows = 0
     start = time.time()
     for p in products:
-        if not p.resolved_ids:
+        if not settings.demo_mode and not p.resolved_ids:
             log.warning("skip product %s: no Vortexa ID configured", p.key)
             continue
         for g in geographies:
-            if g.key != "global" and not g.resolved_ids:
+            if (not settings.demo_mode
+                    and g.key != "global" and not g.resolved_ids):
                 log.warning("skip geography %s: no Vortexa ID configured", g.key)
                 continue
             t0 = time.time()

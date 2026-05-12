@@ -88,13 +88,14 @@ def refresh_all(
     )
 
     for product in products:
-        if not product.resolved_ids:
+        if not settings.demo_mode and not product.resolved_ids:
             log.warning("skipping product %s: no Vortexa ID", product.key)
             continue
         for geo in geographies:
             # Global skips filter_storage_locations entirely (handled in client),
             # so an empty resolved_ids list is OK for the 'global' key only.
-            if geo.key != "global" and not geo.resolved_ids:
+            if (not settings.demo_mode
+                    and geo.key != "global" and not geo.resolved_ids):
                 log.warning("skipping geography %s: no Vortexa ID(s)", geo.key)
                 continue
             rows = fn(settings, cache, client, product, geo)

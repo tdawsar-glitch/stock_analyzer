@@ -50,6 +50,38 @@ Global · regions (North America, Europe, Middle East, Asia-Pacific, LatAm, Afri
 
 ---
 
+## Quick start (localhost)
+
+```bash
+cd oil_inventory_tracker
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r backend/requirements.txt
+cp .env.example .env             # then fill in VORTEXA_API_KEY
+
+# (a) Demo mode — synthetic data, no Vortexa calls. Set OIT_DEMO_MODE=1 in .env.
+python -m scripts.backfill        # ~7 seconds for all 98 pairs
+uvicorn app.main:app --app-dir backend --reload   # backend on :8000
+
+# In another shell:
+cd frontend
+npm install
+npm run dev                       # frontend on http://localhost:5173
+```
+
+Browse to **http://localhost:5173**. The Vite dev server proxies `/api/*` to `http://localhost:8000` so there is no CORS setup.
+
+### Switching to real Vortexa data
+
+1. **Allowlist your IP with Vortexa.** Vortexa enforces a per-customer IP allowlist on `api.vortexa.com`. Until your egress IP is added, calls return `403 Host not in allowlist`. Find your public IP with `curl https://api.ipify.org` and email it to your Vortexa account manager (or `support@vortexa.com`).
+2. **Verify auth** once allowlisted: `python -m vortexasdk.check_setup` should report success.
+3. **Resolve IDs**: `python -m scripts.resolve_ids` and paste the chosen IDs into `config/products.yaml` and `config/geographies.yaml`.
+4. **Flip the flag**: set `OIT_DEMO_MODE=0` in `.env`.
+5. **Re-backfill**: `python -m scripts.backfill` — this is the slow one (5 years × 7 products × 14 geographies); progress is logged per pair.
+
+The DEMO DATA badge in the top bar disappears once `OIT_DEMO_MODE=0`.
+
+---
+
 ## Setup
 
 ### 1. Backend

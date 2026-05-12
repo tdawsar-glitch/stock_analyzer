@@ -17,14 +17,16 @@ env/
 .ruff_cache/
 
 # Data caches
-oil_inventory_tracker/data/*.duckdb
-oil_inventory_tracker/data/*.duckdb.wal
-oil_inventory_tracker/data/cache/
+oil_inventory_tracker/**/data/*.duckdb
+oil_inventory_tracker/**/data/*.duckdb.wal
+oil_inventory_tracker/**/data/cache/
+oil_inventory_tracker/backend/data/
 
 # Frontend
 oil_inventory_tracker/frontend/node_modules/
 oil_inventory_tracker/frontend/dist/
 oil_inventory_tracker/frontend/.vite/
+oil_inventory_tracker/frontend/tsconfig.tsbuildinfo
 
 # OS / editor
 .DS_Store

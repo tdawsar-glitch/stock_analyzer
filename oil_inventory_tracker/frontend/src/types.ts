@@ -17,6 +17,7 @@ export type GeographyMeta = {
 
 export type Meta = {
   last_refresh: string | null;
+  demo_mode?: boolean;
   products: ProductMeta[];
   geographies: GeographyMeta[];
 };
