@@ -1,0 +1,104 @@
+# Vortexa geography reference map.
+#
+# Resolve IDs once via:
+#   from vortexasdk import Geographies
+#   Geographies().search(term="Fujairah").to_df()
+#
+# The `kind` field describes the rollup level for the UI sidebar grouping:
+#   global | region | country | hub
+#
+# `id` should be the Vortexa geography ID. For aggregates (e.g. "global", or
+# a region built from multiple country IDs), use `children` to list the
+# constituent IDs — the backend will sum them at query time.
+# Leave `id` empty for aggregates that are pure sums of `children`.
+
+geographies:
+  # ----- Global -----
+  - key: global
+    label: Global (all onshore tanks)
+    kind: global
+    id: ""
+    children: []        # empty children = no filter_storage_locations sent;
+                        # Vortexa returns the worldwide aggregate.
+
+  # ----- Regions -----
+  - key: north_america
+    label: North America
+    kind: region
+    id: ""
+    children: []        # fill with country/region IDs (US, Canada, Mexico, ...)
+
+  - key: europe
+    label: Europe
+    kind: region
+    id: ""
+    children: []
+
+  - key: middle_east
+    label: Middle East
+    kind: region
+    id: ""
+    children: []
+
+  - key: asia_pacific
+    label: Asia-Pacific
+    kind: region
+    id: ""
+    children: []
+
+  - key: latin_america
+    label: Latin America
+    kind: region
+    id: ""
+    children: []
+
+  - key: africa
+    label: Africa
+    kind: region
+    id: ""
+    children: []
+
+  # ----- Countries -----
+  - key: us
+    label: United States
+    kind: country
+    id: ""
+    children: []
+    eia_reconcile: true   # enable US crude vs EIA delta widget
+
+  - key: china
+    label: China
+    kind: country
+    id: ""
+    children: []
+
+  - key: japan
+    label: Japan
+    kind: country
+    id: ""
+    children: []
+
+  - key: south_korea
+    label: South Korea
+    kind: country
+    id: ""
+    children: []
+
+  - key: singapore
+    label: Singapore
+    kind: country
+    id: ""
+    children: []
+
+  # ----- Hubs -----
+  - key: ara
+    label: ARA (Amsterdam-Rotterdam-Antwerp)
+    kind: hub
+    id: ""
+    children: []        # may need to combine Amsterdam, Rotterdam, Antwerp IDs
+
+  - key: fujairah
+    label: Fujairah (FOIZ)
+    kind: hub
+    id: ""
+    children: []

@@ -1,0 +1,70 @@
+# Vortexa product reference map.
+#
+# Vortexa endpoints require product IDs, not names. Resolve IDs once by running:
+#   python -m scripts.resolve_ids
+# or manually via the SDK:
+#   from vortexasdk import Products
+#   Products().search(term="Gasoline").to_df()
+#
+# The `id` field below must be filled in for each product before the backfill
+# script can run. The `key` field is the stable slug used by the FastAPI
+# endpoint (?product=crude, ?product=gasoline, ...). The `display_unit` is the
+# convention used by industry: crude in million barrels (mb), refined in
+# thousand barrels (kb).
+#
+# Notes:
+# - "Gasoil/Diesel" in Vortexa is sometimes split across multiple sub-products
+#   (ULSD, marine gasoil, etc.). The `children` field can be used to sum
+#   sub-products into a single tracked series. Resolve sub-IDs and list them
+#   in `children` if you want a combined view.
+# - Jet/Kerosene similarly may be split. Combine if needed.
+
+products:
+  - key: crude
+    label: Crude Oil
+    vortexa_search_term: Crude
+    id: ""             # fill in via Products().search(term="Crude")
+    children: []
+    display_unit: mb
+
+  - key: gasoline
+    label: Gasoline
+    vortexa_search_term: Gasoline
+    id: ""
+    children: []
+    display_unit: kb
+
+  - key: gasoil
+    label: Gasoil / Diesel
+    vortexa_search_term: Gasoil
+    id: ""
+    children: []       # optionally add ULSD, marine gasoil sub-IDs
+    display_unit: kb
+
+  - key: jet
+    label: Jet Fuel / Kerosene
+    vortexa_search_term: Jet
+    id: ""
+    children: []
+    display_unit: kb
+
+  - key: fuel_oil
+    label: Fuel Oil (Residual)
+    vortexa_search_term: Fuel Oil
+    id: ""
+    children: []
+    display_unit: kb
+
+  - key: naphtha
+    label: Naphtha
+    vortexa_search_term: Naphtha
+    id: ""
+    children: []
+    display_unit: kb
+
+  - key: lpg
+    label: LPG
+    vortexa_search_term: LPG
+    id: ""
+    children: []
+    display_unit: kb

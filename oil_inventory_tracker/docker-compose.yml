@@ -1,0 +1,30 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: oit-backend
+    env_file: .env
+    environment:
+      OIT_CONFIG_DIR: /app/config
+      CACHE_DB_PATH: /app/data/inventory_cache.duckdb
+    volumes:
+      - oit-data:/app/data
+      - ./config:/app/config:ro
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: oit-frontend
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+    restart: unless-stopped
+
+volumes:
+  oit-data:
